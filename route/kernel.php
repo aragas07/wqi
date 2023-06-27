@@ -5,9 +5,9 @@
     $station = new StationController();
     switch($url[2]){
         case "login": $user->login($_POST['email'],$_POST['password']); break;
-        case "publishData": $home->publishData($_POST['year']); break;
+        case "publishData": $home->publishData($_POST['year'],$_POST['station']); break;
         case "chartData": $home->chartData(); break;
-        case "graphData": $home->graphData($_POST['parameter'],$_POST['station'],$_POST['year'],$_POST['quarter']); break;
+        case "graphData": $home->graphData($_POST['parameter'],$_POST['station'],$_POST['year']); break;
         case "getGraphParams": $home->getGraphParams(); break;
         case "addingStationData": $station->addingStationData(); break;
         case "getStationData": $station->getStationData($_POST['id']); break;
@@ -30,4 +30,6 @@
         case "getData": $home->getData($_POST['year'],$_POST['station']); break;
         case "updateData": $station->updateData($_POST['id'],$_POST['January'],$_POST['February'],$_POST['March'],$_POST['April'],$_POST['May'],$_POST['June'],$_POST['July'],$_POST['August'],$_POST['September'],$_POST['October'],$_POST['November'],$_POST['December'],$_POST['stationId'],$_POST['parameter'],$_POST['year'],$_POST['wqg']); break;
         case "getWQIdata": $station->wqidata($_POST['year']); break;
+        case "publicwqidata": $station->wqidata($_POST['year']); break;
+        
     }

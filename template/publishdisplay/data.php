@@ -13,10 +13,20 @@ htall.include('layout/publish.html')
                     <th colspan="21" class="text-center">CLASSIFICATION PROCESS</th>
                 </tr>
                 <tr>
-                    <th colspan="21" clas
-                    s="text-center">
-                        <span>Quarter CY</span>
+                    <th colspan="11" class="text-center">
+                        <span>CY</span>
                         <select id="year" class="form-select">
+                            <?php
+                             $cy = date('Y');
+                             for($x = 1950; $x < $cy-1; $cy--){
+                                echo "<option>$cy</option>";
+                             }
+                            ?>
+                        </select>
+                    </th>
+                    <th colspan="10" class="text-center">
+                        <span>Station No.</span>
+                        <select id="station" class="form-select">
                             <?php
                              $cy = date('Y');
                              for($x = 1950; $x < $cy-1; $cy--){
@@ -54,17 +64,28 @@ htall.include('layout/publish.html')
     </div>
     <script>
         $(function(){
-            var getdata =()=>{
+            
+            var params = htall.getData({
+                url: 'route/getGraphParams'
+            })
+            $("#station").html(params.stations)
+            var getdata =(station)=>{
                 data =  htall.getData({
                     url: 'route/publishData',
-                    data: {year: $("#year").val()}
+                    data: {year: $("#year").val(), station: station}
                 })
+                console.log(data)
                 $("tbody").html(data.data)
-            }
-            getdata()
+            },
+            station = $("#station").val()
+            getdata(station)
+            
             $("#year").change(function(){
-                getdata()
-                console.log(getdata)
+                getdata(station)
+            })
+
+            $("#station").change(function(){
+                getdata($(this).val())
             })
         })
     </script>

@@ -38,15 +38,6 @@ htall.include('layout/admin.html')
                             <label for="" class="form-label">Station</label>
                             <select id="station" class="form-control form-control-sm"></select>
                         </div>
-                        <div class="form-group mr-3">
-                            <label for="" class="form-label">Quarter</label>
-                            <select id="quarter" class="form-control form-control-sm">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                            </select>
-                        </div>
                         <div class="form-group">
                             <label for="" class="form-abel">Year</label>
                             <select id="year" class="form-control form-control-sm"></select>
@@ -90,12 +81,25 @@ htall.include('layout/admin.html')
                         }
                     ]
                 }
-                console.log("Exampke")
+                
+                var station = $("#station").val(),
+                parameter = $("#parameter").val()
+                $("#parameter").change(function(){
+                    parameter = $(this).val()
+                    barGraph()
+                })
+                $("#station").change(function(){
+                    station = $(this).val()
+                    barGraph()
+                })
+                $("#year").change(function(){
+                    barGraph()
+                })
                 barGraph()
                 function barGraph(){
                     var chartdata = htall.getData({
                         url: 'route/graphData',
-                        data: {parameter:$("#parameter").val(),station:$("#station").val(),year:$("#year").val(),quarter:$("#quarter").val()}
+                        data: {parameter:parameter,station:station,year:$("#year").val()}
                     })
                     console.log(chartdata)
                     var pieData        = donutData;

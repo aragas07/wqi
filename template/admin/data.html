@@ -136,13 +136,13 @@
                         </tr>
                         <tr id="wqg" class="editable">
                             <th contenteditable="false">Water Quality Guideline</th>
-                            <td class="DOcomp"></td>
-                            <td class="pHcomp"></td>
-                            <td class="Tempcomp"></td>
-                            <td class="FCcomp"></td>
-                            <td class="Colorcomp"></td>
-                            <td class="Phosphatecomp"></td>
-                            <td class="TSScomp"></td>
+                            <th class="DOcomp"></th>
+                            <th class="pHcomp"></th>
+                            <th class="Tempcomp"></th>
+                            <th class="FCcomp"></th>
+                            <th class="Colorcomp"></th>
+                            <th class="Phosphatecomp"></th>
+                            <th class="TSScomp"></th>
                         </tr>
                     </tbody>
                 </table>
@@ -170,8 +170,10 @@
                     for(var j = 0; j < month.length ;j++){
                         for(var i = 0; i < Object.keys(data.data).length; i++){
                             bodyrow.children().children().eq(0).text(month[j])
-                            var paramname = data.data[i].Parameter_Acronym
-                            $("#wqg>."+paramname+"comp").text(data.data[i].wqg)
+                            var paramname = data.data[i].Parameter_Acronym,
+                            split = data.data[i].wqg
+                            split = split.split(" ")
+                            $("#wqg>."+paramname+"comp").text(split[3])
                             paramdata[paramname]['id'] = data.data[i].idmonthly_report
                             bodyrow.children().children(".update").children(".fa-edit").attr("id",data.data[i].Station_No)
                             bodyrow.children().children("."+paramname).text(data.data[i][month[j]])
@@ -197,8 +199,6 @@
                         $("#tabledata").append(bodyrow.html())
                     }
                 }
-                console.log("sampler")
-                console.log(paramfetch)
                 $("#tabledata").append($("#tbodycomputation").html())
                 $.each(paramdata,function(i){
                     if(Object.keys(data.data).length == 0){
@@ -227,8 +227,9 @@
                         }
                     })
                     ave = (totaldata/count).toFixed(2)
+                    ave = ave.length != 3 ? ave:'-'
                     $("#average>."+i+"comp").text(ave)
-                    to = checking([paramdata[i].first,paramdata[i].second,paramdata[i].third,paramdata[i].fourth],ave,paramdata[i].step)
+                    to = ave == '-' ? 0:checking([paramdata[i].first,paramdata[i].second,paramdata[i].third,paramdata[i].fourth],ave,paramdata[i].step)
                     
                     for(a = 0; a < to ;a++){
                         $(".params").eq(a).children("."+i+"comp").text("✔")

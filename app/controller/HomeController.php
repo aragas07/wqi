@@ -6,8 +6,8 @@ class HomeController{
         $this->conn = $c->conn();
     }
 
-    public function publishData($year){
-        $src = "WHERE sub.CY = '$year'";
+    public function publishData($year,$station){
+        $src = "WHERE sub.CY = '$year' AND s.Station_No = '$station'";
         $sqlMR = "SELECT r.Region_Name,p.Parameter_Acronym, p.Unit,s.Station_No,s.Station_Identification, s.Class,sub.*,
         CASE WHEN sub.total = 0 and sub.divisor = 0 THEN '-' ELSE ROUND(sub.total/sub.divisor, 1)END as avgR
         FROM (
@@ -51,7 +51,7 @@ class HomeController{
         $resMR = $this->conn->query($sqlMR);
         $data = "";
         if($resMR->num_rows >0){
-            while($row = $resMR->fetch_assoc()){
+            while($rowMR = $resMR->fetch_assoc()){
                 $region = $rowMR['Region_Name'];
 
                 $jan = 0;
@@ -147,7 +147,7 @@ class HomeController{
                     <td>".$rowMR['avgR']."</td>
                     <td>".$min."</td>
                     <td>".$max."</td>
-                    <td>".$rowMR['Class']."</td>
+                    <td>".$rowMR['wqg']."</td>
                 </tr>";
             }
         }
@@ -169,7 +169,6 @@ class HomeController{
         echo json_encode(['class'=>$class,'count'=>$count]);
     }
 
-
     public function getGraphParams(){
         $sqlPar = "SELECT DISTINCT Parameter_No, Parameter_Acronym FROM parameter ";
         $resultPar = $this->conn->query($sqlPar);
@@ -184,7 +183,7 @@ class HomeController{
         $resultStation = $this->conn->query($sqlStation);
         if($resultStation->num_rows > 0){
             while($row = $resultStation->fetch_assoc()){
-                $station .= '<option >'.$row['Station_No'].'</option>';
+                $station .= '<option>'.$row['Station_No'].'</option>';
             }
         }
         
@@ -199,9 +198,9 @@ class HomeController{
         echo json_encode(['params'=>$params, 'stations'=>$station, 'year'=>$year]);
     }
 
-    public function graphData($parameter, $station, $year, $quarter){
+    public function graphData($parameter, $station, $year){
         $data = [];
-        $sqlMR = "SELECT * FROM monthly_report WHERE Parameter_No = '$parameter' and Station_No = '$station' and CY = '$year' and Quarter = '$quarter'";
+        $sqlMR = "SELECT * FROM monthly_report WHERE Parameter_No = '$parameter' and Station_No = '$station' and CY = '$year'";
         $resultMR = $this->conn->query($sqlMR);
         
         while($row = $resultMR->fetch_assoc()){
@@ -218,7 +217,7 @@ class HomeController{
             $data[] = str_replace('<','',$row['November']);
             $data[] = str_replace('<','',$row['December']);
         }
-        echo json_encode(['data'=>$data]);
+        echo json_encode(['data'=>$data,'parameter'=>$parameter,'station'=>$station,'year'=>$year]);
     }
 
     public function getStation(){

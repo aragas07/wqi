@@ -194,6 +194,8 @@ class StationController{
     public function updateData($id,$january,$february,$march,$april,$may,$june,$july,$august,$september,$october,$november,$december,$stationId,$parameter,$year,$wqg){
         $icon = 'error';
         $title = 'Sorry we have a problem about updating the data';
+        if($wqg == '<br>')
+        $wqg = '';
         $getYear = $this->conn->query("SELECT * FROM monthly_report WHERE Station_No = '$stationId' AND CY = $year");
         if($id == '' || mysqli_num_rows($getYear) == 0){
             $icon = 'success';
@@ -202,22 +204,47 @@ class StationController{
             while($res = $result->fetch_assoc()){
                 $paramid = $res['Parameter_No'];
                 $this->conn->query("INSERT INTO monthly_report (January,February,March,April,May,June,July,August,September,October,November,December,Parameter_No,CY,Station_No,wqg)
-                VALUES('$january','$february','$march','$april','$may','$june','$july','$august','$september','$october','$november','$december','$paramid',$year,'$stationId','$wqg')");
+                VALUES('$january','$february','$march','$april','$may','$june','$july','$august','$september','$october','$november','$december','$paramid',$year,'$stationId','Endorsed as Class $wqg')");
             }
         }else{
             $icon = 'success';
             $title = 'The data has been successfully updated';
             $this->conn->query("UPDATE monthly_report SET January = '$january', February = '$february', March = '$march', April = '$april', May = '$may', June = '$june', July = '$july',
-            August = '$august', September = '$september', October = '$october', November = '$november', December = '$december', wqg = '$wqg' WHERE idmonthly_report = $id");
+            August = '$august', September = '$september', October = '$october', November = '$november', December = '$december', wqg = 'Endorsed as Class $wqg' WHERE idmonthly_report = $id");
         }
         echo json_encode(['icon'=>$icon,'title'=>$title,'numrows'=>mysqli_num_rows($getYear),'id'=>$id, 'idlength'=>strlen($id)]);
     }
 
+    
     public function wqidata($year){
         $result = $this->conn->query("SELECT * FROM station");
         $tbody = "";
         while($row = $result->fetch_assoc()){
             $tbody .= "<tr>
+                <td>".$row['Station_Identification']."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"January")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"February")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"March")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"April")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"May")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"June")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"July")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"August")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"September")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"October")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"November")."</td>
+                <td>".$this->getWQI($year,$row['Station_No'],"December")."</td>
+            </tr>";
+        }
+        echo json_encode(['tbody'=>$tbody]);
+    }
+
+    public function publicwqidata($year){
+        $result = $this->conn->query("SELECT * FROM station");
+        $tbody = "";
+        while($row = $result->fetch_assoc()){
+            $tbody .= "<tr>
+                <td>".$row['Region_Name']."</td>
                 <td>".$row['Station_Identification']."</td>
                 <td>".$this->getWQI($year,$row['Station_No'],"January")."</td>
                 <td>".$this->getWQI($year,$row['Station_No'],"February")."</td>
@@ -335,9 +362,9 @@ class StationController{
             $message = "";
             $classified = "-";
             if($WQI >= 0 && $WQI < 25){
-                $classified = $WQI.' - Excellent';
+                $classified = 'Excellent';
             }elseif($WQI > 25 && $WQI <= 50){
-                $classified = $WQI.' - Good';
+                $classified = 'Good';
             }elseif($WQI > 50 && $WQI <= 75){
                 $message = 'For the month of '.$srcMonth.' on '.$srcYear.', with a Water Quality Index (WQI) value of '. $WQI .', according to the provided scale, the water quality would be classified as "Bad".';
             }elseif($WQI > 75 && $WQI <= 100){
