@@ -175,9 +175,13 @@
                             paramdata[paramname]['id'] = data.data[i].idmonthly_report
                             bodyrow.children().children(".update").children(".fa-edit").attr("id",data.data[i].Station_No)
                             bodyrow.children().children("."+paramname).text(data.data[i][month[j]])
-                            paramfetch.length == 0 ? paramfetch = data.data[i][paramname]:$.each(paramfetch,function(fetch){
-                                paramfetch = data.data[i][paramname]
-                            })
+                            if(paramfetch.length == 0)paramfetch.push(paramname)
+                            else for(var k = 0; k < paramfetch.length ;k++){
+                                if(paramfetch[k] == paramname)
+                                    break
+                                if(k == (paramfetch.length + 1))
+                                    paramfetch.push(paramname)
+                            }
                         }
                         bodyrow.children().children().each(function(){
                             $(this).attr("value",month[j])
@@ -193,6 +197,7 @@
                         $("#tabledata").append(bodyrow.html())
                     }
                 }
+                console.log("sampler")
                 console.log(paramfetch)
                 $("#tabledata").append($("#tbodycomputation").html())
                 $.each(paramdata,function(i){
@@ -280,8 +285,8 @@
                         $("."+i).each(function(j){
                             object[$(this).attr("value")] = $(this).text()
                         })
-                        // toast = htall.getData({url:'route/updateData', data: object})
-                        console.log(htall.getData({url:'route/updateData', data: object}))
+                        toast = htall.getData({url:'route/updateData', data: object})
+                        // console.log(htall.getData({url:'route/updateData', data: object}))
                     })
                     htall.toast().fire(toast)
                     getData($("#year").val(),station)

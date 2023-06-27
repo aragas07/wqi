@@ -343,7 +343,7 @@ class StationController{
             }elseif($WQI > 75 && $WQI <= 100){
                 $message = 'For the month of '.$srcMonth.' on '.$srcYear.', with a Water Quality Index (WQI) value of '. $WQI .',  according to the provided scale, the water quality would be classified as "Very Bad".';
             }elseif($WQI > 100){
-                $classified = $WQI.' - Unfit';
+                $classified = 'Unfit';
             }
             return $classified;
         }else{
