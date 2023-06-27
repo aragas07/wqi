@@ -1,0 +1,113 @@
+
+<form>
+    <div class="row col-12 p-0">
+        <div class="col-sm-6 col-12">
+            <div class="form-group col-12">
+                <label>Region</label>
+                <select name="region" id="region" class="form-control form-control-sm"></select>
+            </div>
+            <div class="form-group col-12">
+                <label>Station No.</label>
+                <input type="text" name="station_no" id="station" class="form-control form-control-sm">
+            </div>
+        </div>
+        <div class="col-sm-6 col-12">
+            <div class="form-group col-12">
+                <label>Class Type</label>
+                <select name="class" id="class" class="form-control form-control-sm"></select>
+            </div>
+            <div class="form-group col-12">
+                <label>Station Identification</label>
+                <input type="text" name="station_id" id="stationId" class="form-control form-control-sm">
+            </div>
+        </div>
+    </div>
+    <h3>GEOCOORDINATES</h3>
+    <div class="row">
+        <div class="col-sm-6 col-12">
+            <label>Latitude</label>
+            <div class="d-flex justify-content-start">
+                <input  type="text" name="laDegree" class="form-control " id="validationLatitudeDegree" required>
+                <span>°</span>
+
+                <input  type="text" name="laMinute" class="form-control" id="validationLatitudeMinute" required>
+
+                <span name="lasQ" class="mx-1">’</span>
+                <input  type="text" name="laSecond" class="form-control" id="validationLatitudeSecond" required>
+                <span name="ladQ" class="mx-1">”</span>
+                <input  type="text" name="laDirection" class="form-control" id="validationLatitudeDirection" required>
+
+            </div>
+        </div>
+        <div class="col-sm-6 col-12">
+            <label for="validationLongitude" class="form-label">Longitude</label>
+            <div class="d-flex justify-content-start">
+                <input  type="text" name="loDegree" class="form-control" id="validationLongitudeDegree" required>
+                <span name="loDegSign" class="mx-1">°</span>
+
+                <input  type="text" name="loMinute" class="form-control" id="validationLongitudeMinute" required>
+
+                <span name="losQ" class="mx-1">’</span>
+                <input  type="text" name="loSecond" class="form-control" id="validationLongitudeSecond" required>
+                <span name="lodQ" class="mx-1">”</span>
+                <input  type="text" name="loDirection" class="form-control" id="validationLongitudeDirection" required>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="id" id="station_id">
+    <button class="btn btn-info mt-3 mb-2 float-right">Submit</button>
+</form>
+<script>
+    $(function(){
+        var data = htall.getData({url:'route/addingStationData'})
+        $("#region").html(data.region)
+        $("#class").html(data.class)
+        
+        showmodal = (type,sid)=>{
+            $.get("template/modal/addStation.html",function(e){
+                tbody = $("tbody")
+                id = sid
+                ajaxtype = type
+                $(".modal-body").html(e)
+            })
+            $(".modal").show()
+        }
+        $("form").submit(function(e){
+            e.preventDefault()
+            url = ajaxtype == 'add'? 'route/addStation':'route/updateStation'
+            var add = htall.crud({
+                url: url,
+                data: new FormData(this)
+            })
+
+            htall.toast().fire(add)
+            var getdata = htall.getData({url: 'route/getStations'})
+            tbody.html(getdata.tbody)
+            $(".fa-edit").each(function(e){
+                $(this).click(()=>{
+                    $(".modal-title").text("Update station")
+                    showmodal("update",$(this).attr('id'))
+                })
+            })
+            setTimeout(() => {
+                $(".modal").hide()
+            }, 1000)
+        })
+        $("#station_id").val(id)
+        if(ajaxtype == 'update'){
+            var d = htall.getData({url: 'route/getStationData', data:{id:id}})
+            $("#region").val(d.region)
+            $("#station").val(d.station)
+            $("#class").val(d.class)
+            $("#stationId").val(d.stationId)
+            $("input[name='laDegree']").val(d.degrees)
+            $("input[name='laMinute']").val(d.minutes)
+            $("input[name='laSecond']").val(d.seconds)
+            $("input[name='laDirection']").val(d.direction)
+            $("input[name='loDegree']").val(d.degreesLo)
+            $("input[name='loMinute']").val(d.minutesLo)
+            $("input[name='loSecond']").val(d.secondsLo)
+            $("input[name='loDirection']").val(d.directionLo)
+        }
+    })
+</script>

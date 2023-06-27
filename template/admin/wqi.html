@@ -1,0 +1,49 @@
+<script>htall.include("layout/admin.html")</script>
+<div id="extend">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Water Quality Index</h3>
+            <div class="card-tools">
+                <select id="year" class="form-control form-control-sm"></select>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Sta. ID</th>
+                        <th>January</th>
+                        <th>February</th>
+                        <th>March</th>
+                        <th>April</th>
+                        <th>May</th>
+                        <th>June</th>
+                        <th>July</th>
+                        <th>August</th>
+                        <th>September</th>
+                        <th>October</th>
+                        <th>November</th>
+                        <th>December</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(function(){
+            var year = htall.getData({url:'route/getcy'})
+            $("#year").html(year.data)
+
+            var getdata =()=> {
+                data = htall.getData({url:'route/getWQIdata',data:{year:$("#year").val()}})
+                $("tbody").html(data.tbody)
+            }
+            getdata()
+            $("#year").change(()=>{
+                getdata()
+            })
+        })
+    </script>
+</div>

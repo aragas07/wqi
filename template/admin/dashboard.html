@@ -1,0 +1,172 @@
+<script>
+htall.include('layout/admin.html')
+</script>
+<?php
+
+
+?>
+<div id="extend">
+    <div class="card">
+        <div class="card-header ui-sortable-handle" style="cursor: move;">
+            <h3 class="card-title">
+                <i class="fas fa-chart-pie mr-1"></i>
+                Sales
+            </h3>
+            <div class="card-tools">
+                <ul class="nav nav-pills ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" role="button" id="pie" data-toggle="tab">Pie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" role="button" id="graph" data-toggle="tab">Graph</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="card-body">
+            <div style="height: 350px!important" class="tab-content p-0">
+                <div class="chart tab-pane active" id="tab-pie" style="position: relative; height: 400px;">
+                    <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+                <div class="chart tab-pane" id="tab-graph" style="position: relative; height: 400px;">
+                    <div class="row col-12 m-0 p-0">
+                        <div class="form-group mr-3">
+                            <label for="" class="form-label">Parameter</label>
+                            <select id="parameter" class="form-control form-control-sm"></select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <label for="" class="form-label">Station</label>
+                            <select id="station" class="form-control form-control-sm"></select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <label for="" class="form-label">Quarter</label>
+                            <select id="quarter" class="form-control form-control-sm">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="form-abel">Year</label>
+                            <select id="year" class="form-control form-control-sm"></select>
+                        </div>
+                    </div>
+                    <canvas id="barChart" height="0" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;" class="chartjs-render-monitor" width="0"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+        <script src="bootstrap/chart.js/Chart.min.js"></script>
+        <script>
+            $(function(){
+                var params = htall.getData({
+                    url: 'route/getGraphParams'
+                })
+
+                var ctx = document.getElementById('barChart').getContext('2d'),
+                pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+                $("#parameter").html(params.params)
+                $("#station").html(params.stations)
+                $("#year").html(params.year)
+                var tab = $(".card-tools>ul>li")
+                tab.children().click(function(){
+                    tab.children(".active").removeClass("active")
+                    $(this).addClass("active")
+                    $(".tab-content>.active").removeClass("active")
+                    console.log($(this).attr("id"))
+                    $("#tab-"+$(this).attr('id')).addClass("active")
+                })
+                var pieData = htall.getData({
+                    url: 'route/chartData'
+                })
+                var donutData = {
+                    labels: pieData.class,
+                    datasets: [
+                        {
+                            data: pieData.count,
+                            backgroundColor : ['#B70404','#025464','#f56954', '#00a65a', '#f39c12', '#572089'],
+                        }
+                    ]
+                }
+                console.log("Exampke")
+                barGraph()
+                function barGraph(){
+                    var chartdata = htall.getData({
+                        url: 'route/graphData',
+                        data: {parameter:$("#parameter").val(),station:$("#station").val(),year:$("#year").val(),quarter:$("#quarter").val()}
+                    })
+                    console.log(chartdata)
+                    var pieData        = donutData;
+                    var pieOptions     = {
+                        maintainAspectRatio : false,
+                        responsive : true,
+                    }
+                    new Chart(pieChartCanvas, {
+                        type: 'pie',
+                        data: pieData,
+                        options: pieOptions
+                    })
+
+                    // Define the data for the bar graph
+                    var data = {
+                        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'], // X-axis labels
+                        datasets: [
+                            {
+                                label: 'Data', // Label for the data
+                                data:chartdata.data,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)',
+                                    'rgba(255, 205, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(201, 203, 207, 0.2)',
+                                    'rgb(255, 0, 0, 0.2)',
+                                    'rgb(0, 255, 0, 0.2)',
+                                    'rgb(0, 0, 255, 0.2)',
+                                    'rgb(128, 128, 128, 0.2)',
+                                    'rgb(255, 0, 255, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgb(255, 99, 132)',
+                                    'rgb(255, 159, 64)',
+                                    'rgb(255, 205, 86)',
+                                    'rgb(75, 192, 192)',
+                                    'rgb(54, 162, 235)',
+                                    'rgb(153, 102, 255)',
+                                    'rgb(201, 203, 207)',
+                                    'rgb(255, 0, 0)',
+                                    'rgb(0, 255, 0)',
+                                    'rgb(0, 0, 255)',
+                                    'rgb(128, 128, 128)',
+                                    'rgb(255, 0, 255)'
+                                ], // Border colors
+                                borderWidth: 1 // Border width
+                            }
+                        ]
+                    };
+
+                    // Configure the options for the bar graph
+                    var options = {
+                        responsive: true, // Make the chart responsive
+                        scales: {
+                            y: {
+                                beginAtZero: true // Start the y-axis from zero
+                            }
+                        }
+                    };
+
+                    // Create the bar graph using Chart.js
+                    var barChart = new Chart(ctx, {
+                        type: 'bar', // Set the chart type to bar
+                        data: data, // Use the defined data
+                        options: options // Use the defined options
+                    });
+                }
+            })
+        </script>
+
+</div>

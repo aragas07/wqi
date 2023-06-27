@@ -1,0 +1,76 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<nav class="navbar navbar-expand navbar-lightblue">
+    <!-- Left navbar links -->
+    <a href="" style="position: relative!important" class="brand-link p-0">
+        <img src="template/admin/img/WQI.png" class="brand-image img-circle elevation-3">
+        <p style="font-size: 19px; color: black; font-weight: lighter; margin-bottom:0">WQI Visualizer</p>
+    </a>
+
+    <!-- Right navbar links -->
+    <ul class="navs ml-auto">
+        <li id="nav" class="nav-item">
+            <a href="/" class="nav-link text-light navigation-link p-0">Home</a>
+        </li>
+        <li id="navmap" class="nav-item">
+            <a href="/map" class="nav-link text-light navigation-link p-0">Map</a>
+        </li>
+        <li id="navmonitoring" class="nav-item">
+            <a class="nav-link text-light navigation-link p-0" data-toggle="dropdown" type="button" href="#" aria-expanded="true">
+                MONITORING
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg" style="left: inherit; z-index: 100">
+              <a id="subnavdata" href="data" class="dropdown-item">Data</a>
+              <div class="dropdown-divider"></div>
+              <a id="subnavwqi" href="wqi" class="dropdown-item">WQI</a>
+            </div>
+          </li>
+        <li id="navlogin" class="nav-item">
+            <a href="/login" class="nav-link text-light navigation-link p-0">Login</a>
+        </li>
+    </ul>
+  </nav>
+<section id="include" class="content"></section>
+<script>
+    $(function(){
+        console.log(htall.url())
+        $(`#nav${htall.url()}`).addClass("nav-active")
+        $(`#subnav${htall.url()}`).addClass("nav-active").parent().parent().addClass("nav-active")
+    })
+</script>
+<div class="bg-light">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center p-2 border-top">
+        <div class="col-md-6 d-flex align-items-center">
+
+            <div class="row col-md-12 g-2">
+                <span class="mb-3 mb-md-0 text-muted ms-2">Contact details:</span>
+                <div class="col-md-6 text-center">
+                    <p>Contact No. <br>(087)388-3569) </p>    
+                </div>
+                <div class="col-md-6">
+                    <p>Email:<br>
+                        cenromati@denr.gov.ph
+                        cenromati@yahoo.com</p>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6 ">
+            <div class="col-md-12 d-flex justify-content-end align-items-end">
+                <ul class="nav col-md-4 list-unstyled d-flex ">
+                    <li class="ms-3"><img src="template/admin/img/denr.png" width="50"></li>
+                </ul>
+               
+            </div>
+            
+            <div class="col-md-12 d-flex justify-content-end">
+              
+                <div class="col-md-5 text-center">
+                 
+                    <span>&copy; All rights reserved 2023</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>

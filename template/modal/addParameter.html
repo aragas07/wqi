@@ -1,0 +1,71 @@
+
+<form>
+    <div class="row p-0">
+        <div class="col-md-6 col-12">
+            <div class="col-12">
+                <label for="validationParameterNo" class="form-label">Parameter No</label>
+                <input  type="text" class="form-control" name="parNo" id="validationParameterNo" placeholder="0000" required>
+            </div>
+            <div class="col-12">
+                <label for="validatioParameterAcronym" class="form-label">Parameter Acronym</label>
+                <input  type="text" name="parAcr" class="form-control" id="validationParameterAcronym" placeholder="AI" required>
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="col-12">
+                <label for="validatioParameterName" class="form-label">Parameter Identification</label>
+                <input  type="text" name="parId" class="form-control" id="validationParameterName" placeholder="Parameter" required>
+            </div>
+            <div class="col-12">
+                <label for="validatioParameterUnit" class="form-label">Parameter Unit</label>
+                <input  type="text" name="parUnit" class="form-control" id="validationParameterUnit" placeholder="mg/L">
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="id" id="param_id">
+    <button class="btn btn-info mt-3 mb-2 float-right">Submit</button>
+</form>
+
+<script>
+    $(function(){
+        showData = (type,pid)=>{
+            $.get("template/modal/addParameter.html",function(e){
+                tbody = $("tbody")
+                ajaxtype = type
+                id = pid
+                $(".modal-body").html(e)
+            })
+            $(".modal").show()
+        }
+        $("form").submit(function(e){
+            e.preventDefault()
+            url = ajaxtype == 'add' ? 'route/addParameter':'route/updateParameter'
+            var crud = htall.crud({
+                url: url,
+                data: new FormData(this)
+            })
+            htall.toast().fire(crud)
+
+            var tabledata = htall.getData({url: 'route/getParameter'})
+            tbody.html(tabledata.tbody)
+            $(".fa-edit").each(function(i){
+                $(this).click(()=>{
+                    $(".modal-title").text("Update parameter")
+                    showData("update",$(this).attr('id'))
+                })
+            })
+            
+            setTimeout(() => {
+                $(".modal").hide()
+            }, 1000)
+        })
+        if(ajaxtype == 'update'){
+            var data = htall.getData({url:'route/addingParameterData', data:{id:id}})
+            $("#validationParameterNo").val(data.paramNo).prop('disabled',true)
+            $("#validationParameterAcronym").val(data.paramAcro)
+            $("#validationParameterName").val(data.param)
+            $("#validationParameterUnit").val(data.unit)
+            $("#param_id").val(id)
+        }
+    })
+</script>

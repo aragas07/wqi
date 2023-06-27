@@ -1,0 +1,135 @@
+<script>htall.include('layout/admin.html')</script>
+<div id="extend">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fas fa-search"></i>
+                <input type="search" placeholder="Saerch" name="" id="" class="form-control form-control-sm pl-4">
+            </div>
+            <div class="card-tools">
+                <button class="btn btn-info">Add</button>
+                <button class="btn btn-warning">Print</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="print">
+                <h2 class="text-center">Water Quality Guidelines for Primary Parameters</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Parameter</th>
+                            <th rowspan="2">Unit</th>
+                            <th colspan="4" class="text-center">Water Quality Classification</th>
+                            <th rowspan="2" class="hdn" style="width: 50px">Update</th>
+                        </tr>
+                        <tr>
+                            <th>SA</th>
+                            <th>SB</th>
+                            <th>SC</th>
+                            <th>SD</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                
+                <h5 class="mt-3">Notes:</h5>
+                <ul id="note" class="list-unstyled mt-1"></ul>
+    
+            </div>
+
+            <h5 style="margin-top: 50px;">Coastal and Marine Waters</h5>
+            <div class="row">
+                <div class="col-4">
+                    <label class="text-center">Classification</label>
+                </div>
+                <div class="col-8">
+                    <label class="text-center">Beneficial Use</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-1 text-center"><b>SA</b></div>
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <p>
+                        - Waters suitable for the propagation, survival and harvesting of shellfish for commercial purposes;
+                    </p>
+                    <p>
+                        - Tourist zones and national marine parks and reserves established under Presidential Proclamation No. 1801;
+                        existing laws and/or declared as such by appropriate government agency.
+                    </p>
+                    <p>
+                        - Coral reef parks and reserves designated by law and concerned authorities.
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-1 text-center"><b>SB</b></div>
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <p>
+                        - Recreational Water Class 1 ( Areas regular used by the public for bathing, swimming, skin diving, etc.,)
+                    </p>
+                    <p>
+                        - Fishery Water Class 1 ( Spawning areas for Chanos-chanos or "Bangus" and similar species).
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-1 text-center"><b>SC</b></div>
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <p>
+                        - Recreational Water Class 2 ( e.g. boating, etc.,)
+                    </p>
+                    <p>
+                        - Fishery Water Class 2 ( Commercial and sustenance fishing);
+                    </p>
+                    <p>
+                        - Marshy and/or mangrove areas declared as fish and wildlife sanctuaries;
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-1 text-center"><b>SD</b></div>
+                <div class="col-1"></div>
+                <div class="col-10">
+                    <p>- Industrial Water Supply Class 2 ( e.g. cooling, etc.,);</p>
+                    <p>- Other coastal and marine waters, by their quality, belong to this classification.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            var getdata = htall.getData({url: 'route/getWQG'}),
+            getNotes = htall.getData({url: "route/getNotes"})
+            $("#note").html(getNotes.notes)
+            $("tbody").html(getdata.tbody)
+
+            $(".btn-info").click(()=>{
+
+            })
+            
+            $(".btn-warning").click(()=>{
+                // $("#print").children("table").children('thead').children('tr').children().eq(7).css('display','none')
+                var printContents = $("#print");
+                var originalContents = document.body.innerHTML;
+                removeColumn();
+                document.body.innerHTML = printContents.html();
+
+                window.print();
+                // document.body.innerHTML = originalContents;
+                location.reload()
+
+            })
+            function removeColumn() {
+
+                var all_col=document.getElementsByClassName('hdn');
+                for(var i=0;i<all_col.length;i++)
+                {
+                    all_col[i].style.display="none";
+                }
+            }
+        })
+    </script>
+</div>

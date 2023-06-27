@@ -1,0 +1,117 @@
+
+<form class="g-3" action="controller/controller_employee.php" method="post" id="form">
+    <div class="row">
+        <div class="col-md-6 col-12">
+            <div class="col-md-12">
+                <label for="EmployeeAccType" class="form-label">Employee Account Type:</label>
+                <select type="text" name="accType" class="form-control" id="EmployeeAccType"  required>
+                    <option value="">Select...</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Staff">Staff</option>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <label for="EmployeeFirstname" class="form-label">First name</label>
+                <input type="text" name="fname" class="form-control" id="EmployeeFirstname"  required>
+            </div>
+            <div class="col-md-12">
+                <label for="EmployeeLastname" class="form-label">Last name</label>
+                <input type="text" name="lname" class="form-control" id="EmployeeLastname" required>
+            </div>
+            <div class="col-md-12">
+                <label for="DefaultUsername" class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" id="DefaultUsername"  aria-describedby="inputGroupPrepend2" required>
+            </div>
+            <div class="col-md-12">
+                <label for="Password" class="form-label">Password</label>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" class="form-control" name="password" id="password-field"  required>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="col-md-12">
+                <label for="EmployeeID" class="form-label">Employee ID</label>
+                <input type="text" name="Id" class="form-control" id="EmployeeID"  required>
+            </div>
+            <div class="col-md-12">
+                <label for="EmployeeMiddlename" class="form-label">Middle name</label>
+                <input type="text" name="mname" class="form-control" id="EmployeeMiddlename" placeholder="Optional">
+            </div>
+            <div class="col-md-12">
+                <label for="EmployeeSuffix" class="form-label">Suffix</label>
+                <input type="text" name="suffix" class="form-control" id="EmployeeSuffix" placeholder="Optional" >
+            </div>
+            <div class="col-md-12">
+                <label for="DefaultEmail" class="form-label">Email</label>
+                <div class="input-group">
+                    <input type="email" name="email" class="form-control" id="DefaultEmail"  aria-describedby="inputGroupPrepend2" required>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label for="Password" class="form-label">Confirm Password</label>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" class="form-control" name="cpassword" id="cpassword-field"  required>
+                    <a class="error-validation">Invalid confirmation password</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" name="eid" id="employee_id">
+    <button class="btn btn-info mt-3 mb-2 float-right">Submit</button>
+</form>
+
+<script>
+    $(function(){
+        var showData = (type,eid)=>{
+            $.get("template/modal/addEmployee.html",function(e){
+                tbody = $("tbody")
+                ajaxtype = type
+                id = eid
+                $(".modal-body").html(e)
+            })
+            $(".modal").show()
+        }
+        $("form").submit(function(e){
+            e.preventDefault()
+            if($("#cpassword-field").val() == $("#password-field").val()){
+                url = ajaxtype == 'add' ? 'route/addPersonnel':'route/updatePersonnel'
+                var add = htall.crud({
+                    url:url,
+                    data: new FormData(this)
+                })
+                htall.toast().fire(add)
+                console.log(add)
+                var data = htall.getData({url: "route/getPersonnel"})
+                tbody.html(data.tbody)
+                $(".fa-edit").each(function(i){
+                    $(this).click(()=>{
+                        $(".modal-title").text("Update employee")
+                        showData("update",$(this).attr('value'))
+                    })
+                })
+                
+                setTimeout(() => {
+                    $(".modal").hide()
+                }, 1000)
+            }else{
+                $(".error-validation").css('display','block')
+            }
+        })
+        if(ajaxtype != 'add'){
+            var pData = htall.getData({url: "route/getPersonnelData", data:{id:id}})
+            $("#employee_id").val(id)
+            $("#EmployeeAccType").val(pData.accountType)
+            $("#EmployeeFirstname").val(pData.firstname)
+            $("#DefaultUsername").val(pData.username)
+            $("#password-field").val(pData.password)
+            $("#EmployeeID").val(pData.userId)
+            $("#EmployeeMiddlename").val(pData.middlename)
+            $("#EmployeeSuffix").val(pData.suffix)
+            $("#DefaultEmail").val(pData.email)
+            $("#EmployeeLastname").val(pData.lastname)
+            $("#cpassword-field").val(pData.password)
+        }
+    })
+</script>

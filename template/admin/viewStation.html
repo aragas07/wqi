@@ -1,0 +1,111 @@
+<script>htall.include('layout/admin.html')</script>
+<div id="extend">
+    
+<div class="col-12" id="map" style="height: 370px;">
+
+</div>
+<script>
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 11.5,
+            center: {lat: 6.873890, lng: 126.227305} // default center point
+        });
+        // Create a custom control for the legend
+        var legendControlDiv = document.createElement('div');
+        var legendControl = new LegendControl(legendControlDiv);
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(legendControlDiv);
+
+        // Define the legend control
+        function LegendControl(controlDiv) {
+            // Create the legend element
+            var legend = document.createElement('div');
+            legend.style.backgroundColor = 'white';
+            legend.style.margin = '2px';
+            legend.style.padding = '10px';
+            legend.style.fontFamily = 'Arial, sans-serif';
+
+            // Add the legend content
+            legend.innerHTML = '<h5>Legend</h5>' +
+                '<div><span style="width: 20px; height: 20px; display: inline-block;"><img src="template/admin/img/icon.png" width="20"></span> Station</div>';
+
+
+            // Append the legend to the control div
+            controlDiv.appendChild(legend);
+        }
+        // Create a custom control for the legend
+        var legendControlDivLeft = document.createElement('div');
+        var legendControlLeft = new LegendControlLeft(legendControlDivLeft);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(legendControlDivLeft);
+
+        // Define the legend control
+        function LegendControlLeft(controlDiv) {
+            // Create the legend element
+            var legendLeft = document.createElement('div');
+            legendLeft.style.backgroundColor = 'white';
+            legendLeft.style.margin = '2px';
+            legendLeft.style.padding = '10px';
+            legendLeft.style.fontFamily = 'Arial, sans-serif';
+
+            // Add the legend content
+            legendLeft.innerHTML = '<h5>Pujada Bay</h5>' +
+                '<div><span style="width: 20px; height: 20px;">Mati City, Davao Oriental</span></div>';
+
+
+            // Append the legend to the control div
+            controlDiv.appendChild(legendLeft);
+        }
+
+    }
+</script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-Y7OV_eA9mGi1vJtnLWZaBTO6ptogD5w&callback=initMap" async defer></script>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fas fa-search"></i>
+                <input type="search" placeholder="Saerch" name="" id="" class="form-control form-control-sm pl-4">
+            </div>
+            <div class="card-tools">
+                <button id="showmodal" class="btn btn-info">Add Station</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="text-center">
+                        <th >STA. NO.</th>
+                        <th >STATION IDENTIFICATION</th>
+                        <th style="width:180px">GEOCOORDINATES</th>
+                        <th style="width: 50px">Update</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            var getdata = htall.getData({url: 'route/getStations'}),
+            showmodal = (type,sid)=>{
+                $.get("template/modal/addStation.html",function(e){
+                    tbody = $("tbody")
+                    id = sid
+                    ajaxtype = type
+                    $(".modal-body").html(e)
+                })
+                $(".modal").show()
+            }
+            
+            $("tbody").html(getdata.tbody)
+            $(".fa-edit").each(function(e){
+                $(this).click(()=>{
+                    $(".modal-title").text("Update station")
+                    showmodal("update",$(this).attr('id'))
+                })
+            })
+            $("#showmodal").click(()=>{
+                showmodal("add",0)
+            })
+        })
+    </script>
+</div>

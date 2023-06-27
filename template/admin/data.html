@@ -1,0 +1,307 @@
+<script>htall.include('layout/admin.html')</script>
+<div id="extend">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title"></div>
+            <div class="card-tools">
+                <button class="btn btn-warning">Print</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="print">
+                <h2 class="text-center">SUMMARY REPORT OF WATER QUALITY MONITORING DATA IN REGION XI</h2>
+                <h3 class="text-center">CLASSIFICATION PROCESS</h3>
+                <div id="formgroup" class="row justify-content-between">
+                    <div class="form-group row col-3">
+                        <label class="col-4">Region</label>
+                        <select id="region" class="form-control col form-control-sm">
+                            <option value="">XI</option>
+                        </select>
+                    </div>
+                    <div class="form-group row col-2">
+                        <label class="col-5">Year</label>
+                        <select id="year" class="form-control col form-control-sm"></select>
+                    </div>
+                    <div class="form-group row col-2">
+                        <label class="col-7">Station No</label>
+                        <select id="station" class="form-control col form-control-sm"></select>
+                    </div>
+                    <button class="btn btn-modify-primary"><i class="fas fa-edit"></i> Edit Data</button>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center" style="background-color:  #dee2e6; vertical-align: middle;" colspan="9"><h5 id="locationTitle" style="font-weight: bold;"></h5></th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2" style="text-align: center; vertical-align: middle;">Month</th>
+                            <th colspan="7" class="text-center">Parameter</th>
+                        </tr>
+                        <tr class="text-center">
+                            <th>DO</th>
+                            <th>pH</th>
+                            <th>Temperature</th>
+                            <th>Fecal Coli form</th>
+                            <th>Color</th>
+                            <th>Phosphate</th>
+                            <th>TSS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabledata"></tbody>
+                    <tfoot hidden>
+                        <tr class="editable">
+                            <td contenteditable="false" style="caret-color: transparent!important;">-</td>
+                            <td class="DO">-</td>
+                            <td class="pH">-</td>
+                            <td class="Temp">-</td>
+                            <td class="FC">-</td>
+                            <td class="Color">-</td>
+                            <td class="Phosphate">-</td>
+                            <td class="TSS">-</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <table hidden>
+                    <tbody id="tbodycomputation">
+                        <tr id="average">
+                            <th>Ave</th>
+                            <th class="DOcomp"></th>
+                            <th class="pHcomp"></th>
+                            <th class="Tempcomp"></th>
+                            <th class="FCcomp"></th>
+                            <th class="Colorcomp"></th>
+                            <th class="Phosphatecomp"></th>
+                            <th class="TSScomp"></th>
+                        </tr>
+                        <tr id="minimum">
+                            <th>Min</th>
+                            <td class="DOcomp"></td>
+                            <td class="pHcomp"></td>
+                            <td class="Tempcomp"></td>
+                            <td class="FCcomp"></td>
+                            <td class="Colorcomp"></td>
+                            <td class="Phosphatecomp"></td>
+                            <td class="TSScomp"></td>
+                        </tr>
+                        <tr id="maximum">
+                            <th>Max</th>
+                            <td class="DOcomp"></td>
+                            <td class="pHcomp"></td>
+                            <td class="Tempcomp"></td>
+                            <td class="FCcomp"></td>
+                            <td class="Colorcomp"></td>
+                            <td class="Phosphatecomp"></td>
+                            <td class="TSScomp"></td>
+                        </tr>
+                        <tr class="params">
+                            <th contenteditable="false">SA</th>
+                            <td class="DOcomp"></td>
+                            <td class="pHcomp"></td>
+                            <td class="Tempcomp"></td>
+                            <td class="FCcomp"></td>
+                            <td class="Colorcomp"></td>
+                            <td class="Phosphatecomp"></td>
+                            <td class="TSScomp"></td>
+                        </tr>
+                        <tr class="params">
+                            <th contenteditable="false">SB</th>
+                            <td class="DOcomp"></td>
+                            <td class="pHcomp"></td>
+                            <td class="Tempcomp"></td>
+                            <td class="FCcomp"></td>
+                            <td class="Colorcomp"></td>
+                            <td class="Phosphatecomp"></td>
+                            <td class="TSScomp"></td>
+                        </tr>
+                        <tr class="params">
+                            <th contenteditable="false">SC</th>
+                            <td class="DOcomp"></td>
+                            <td class="pHcomp"></td>
+                            <td class="Tempcomp"></td>
+                            <td class="FCcomp"></td>
+                            <td class="Colorcomp"></td>
+                            <td class="Phosphatecomp"></td>
+                            <td class="TSScomp"></td>
+                        </tr>
+                        <tr class="params">
+                            <th contenteditable="false">SD</th>
+                            <td class="DOcomp"></td>
+                            <td class="pHcomp"></td>
+                            <td class="Tempcomp"></td>
+                            <td class="FCcomp"></td>
+                            <td class="Colorcomp"></td>
+                            <td class="Phosphatecomp"></td>
+                            <td class="TSScomp"></td>
+                        </tr>
+                        <tr id="wqg" class="editable">
+                            <th contenteditable="false">Water Quality Guideline</th>
+                            <td class="DOcomp"></td>
+                            <td class="pHcomp"></td>
+                            <td class="Tempcomp"></td>
+                            <td class="FCcomp"></td>
+                            <td class="Colorcomp"></td>
+                            <td class="Phosphatecomp"></td>
+                            <td class="TSScomp"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p id="forecast"></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            
+            var bodyrow = $("tfoot")
+            var getStation = htall.getData({url:'route/getStation'}),
+            getCY = htall.getData({url:'route/getcy'})
+            $("#station").html(getStation.data)
+            $("#year").html(getCY.data)
+            var paramdata = {DO:{id:'',step:false,first:6,second:6,third:5,fourth:2},pH:{id:'',step:true,first:'7.0-8.5',second:'7.0-8.5',third:'6.5-8.5',fourth:'6.0-9.0'},Temp:{id:'',step:true,first:'26-30',second:'26-30',third:'25-31',fourth:'25-32'},FC:{id:'',step:true,first:1.1,second:100,third:200,fourth:400},Color:{id:'',step:true,first:5,second:50,third:75,fourth:150},Phosphate:{id:'',step:true,first:0.1,second:0.5,third:0.5,fourth:5},TSS:{id:'',step:true,first:25,second:50,third:80,fourth:110}},
+            month = ['January','February','March','April','May','June','July','August','September','October','November','December'],
+            getData=(year,station)=>{
+                $("#tabledata").empty()
+                data = htall.getData({url: 'route/getData',data:{year:year,station:station}})
+                $("#forecast").text(data.forecast)
+                $("#locationTitle").text(data.loc)
+                paramfetch = []
+                if(Object.keys(data.data).length > 0){
+                    for(var j = 0; j < month.length ;j++){
+                        for(var i = 0; i < Object.keys(data.data).length; i++){
+                            bodyrow.children().children().eq(0).text(month[j])
+                            var paramname = data.data[i].Parameter_Acronym
+                            $("#wqg>."+paramname+"comp").text(data.data[i].wqg)
+                            paramdata[paramname]['id'] = data.data[i].idmonthly_report
+                            bodyrow.children().children(".update").children(".fa-edit").attr("id",data.data[i].Station_No)
+                            bodyrow.children().children("."+paramname).text(data.data[i][month[j]])
+                            paramfetch.length == 0 ? paramfetch = data.data[i][paramname]:$.each(paramfetch,function(fetch){
+                                paramfetch = data.data[i][paramname]
+                            })
+                        }
+                        bodyrow.children().children().each(function(){
+                            $(this).attr("value",month[j])
+                        })
+                        $("#tabledata").append(bodyrow.html())
+                    }
+                }else{
+                    for(var i = 0; i < month.length; i++){
+                        bodyrow.children().children().eq(0).text(month[i])
+                        bodyrow.children().children().each(function(){
+                            $(this).attr("value",month[i])
+                        })
+                        $("#tabledata").append(bodyrow.html())
+                    }
+                }
+                console.log(paramfetch)
+                $("#tabledata").append($("#tbodycomputation").html())
+                $.each(paramdata,function(i){
+                    if(Object.keys(data.data).length == 0){
+                        console.log("data empty")
+                        paramdata[i]['id'] = ''
+                    }
+                    
+
+                    var count = 0,
+                    totaldata = 0,
+                    min = 0,
+                    max = 0
+                    $("."+i).each(function(){
+                        if($(this).text() != '-' && $(this).text() != ''){
+                            count++
+                            var num = $(this).text(),
+                            nega = num
+                            if($(this).text().charAt(0) == '<'){
+                                num = num.substring(1,num.length)
+                                nega = -parseFloat(num)
+                            }else
+                                nega = parseFloat(num)
+                            min = count == 1 ? nega: min < nega ? min:nega
+                            max = max > nega ? max:nega
+                            totaldata += parseFloat(num)
+                        }
+                    })
+                    ave = (totaldata/count).toFixed(2)
+                    $("#average>."+i+"comp").text(ave)
+                    to = checking([paramdata[i].first,paramdata[i].second,paramdata[i].third,paramdata[i].fourth],ave,paramdata[i].step)
+                    
+                    for(a = 0; a < to ;a++){
+                        $(".params").eq(a).children("."+i+"comp").text("✔")
+                    }
+                    $("#minimum>."+i+"comp").text(min)
+                    $("#maximum>."+i+"comp").text(max)
+                })
+            },
+            station = $("#station").val()
+            getData($("#year").val(),station)
+            function checking(range,ave,step){
+                num = 0
+                if(range[0].length > 3){
+                    for(i = 0; i < 4 ;i++){
+                        split = range[i].split("-")
+                        if(split[0] <= ave && split[1] >= ave){
+                            num = i + 1
+                        }
+                    }
+                }else{
+                    if(step)
+                    for(i = 0; i < 4 ;i++){
+                        if(range[i] > ave){
+                            break
+                        }
+                            num = i + 1
+                    }
+                    if(!step)
+                    for(i = 3; i > 0 ;i--){
+                            num = i + 1
+                        if(range[i] > ave){
+                            break
+                        }
+                    }
+                }
+                return num
+            }
+            $("#year").change(()=>{
+                getData($("#year").val(),station)
+            })
+            $(".btn-modify-primary").click(function(){
+                var attrib = $(this).children(".fas").attr('class') == "fas fa-edit" ? {class:'fa-paper-plane',b:true,text:'Submit',caret: '#333'}:{class:'fa-edit',b:false,text:'Edit',caret: 'transparent'}
+                $(this).html(`<i class="fas ${attrib.class}"></i> ${attrib.text} Data`)
+                $("#tabledata>.editable").attr("contenteditable",attrib.b).css('caret-color',attrib.caret)
+                if(!attrib.b){
+                    var toast = ''
+                    
+                    $.each(paramdata,function(i){
+                        var object = {id:paramdata[i]['id']}
+                        object['stationId'] = station
+                        object['year'] = $("#year").val()
+                        object['parameter'] = i
+                        object['wqg'] = $("#wqg>."+i+"comp").html()
+                        $("."+i).each(function(j){
+                            object[$(this).attr("value")] = $(this).text()
+                        })
+                        // toast = htall.getData({url:'route/updateData', data: object})
+                        console.log(htall.getData({url:'route/updateData', data: object}))
+                    })
+                    htall.toast().fire(toast)
+                    getData($("#year").val(),station)
+                }
+            })
+            $("#station").change(function(){
+                station = $(this).val()
+                getData($("#year").val(),station)
+            })
+            
+            $(".btn-warning").click(()=>{
+                var printContents = $("#print")
+                var originalContents = document.body.innerHTML
+                document.body.innerHTML = printContents.html()
+                $("#formgroup").css("display",'none')
+                window.print()
+                $("#formgroup").css("display",'block')
+                location.reload()
+
+            })
+        })
+    </script>
+</div>

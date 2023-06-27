@@ -1,0 +1,54 @@
+<script>htall.include('layout/admin.html')</script>
+<div id="extend">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <i class="fas fa-search"></i>
+                <input type="search" placeholder="Saerch" name="" id="" class="form-control form-control-sm pl-4">
+            </div>
+            <div class="card-tools">
+                <button id="addparameter" class="btn btn-info">Add Parameter</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Parameter No</th>
+                        <th>Parameter Acronym</th>
+                        <th>Parameter</th>
+                        <th>Unit</th>
+                        <th>Update</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        $(function(){
+            var tabledata = htall.getData({url: 'route/getParameter'}),
+            showData = (type,pid)=>{
+                $.get("template/modal/addParameter.html",function(e){
+                    tbody = $("tbody")
+                    ajaxtype = type
+                    id = pid
+                    $(".modal-body").html(e)
+                })
+                $(".modal").show()
+            }
+            $("tbody").html(tabledata.tbody)
+            $(".fa-edit").each(function(i){
+                $(this).click(()=>{
+                    $(".modal-title").text("Update parameter")
+                    showData("update",$(this).attr('id'))
+                })
+            })
+
+            $("#addparameter").click(()=>{
+                $(".modal-title").text("Add parameter")
+                showData('add',0)
+            })
+        })
+    </script>
+</div>
